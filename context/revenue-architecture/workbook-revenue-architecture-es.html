@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revenue Architecture — Cuaderno de Trabajo</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    color: #111;
+    background: #fff;
+  }
+
+  /* ===== PAGE SETUP ===== */
+  @page { size: letter; margin: 20mm 18mm; }
+  @media print {
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+  }
+  .page-break { page-break-before: always; margin-top: 40px; }
+
+  /* ===== LAYOUT ===== */
+  .page { max-width: 740px; margin: 0 auto; padding: 20px 30px 40px; }
+
+  /* ===== COVER ===== */
+  .cover {
+    background: #000;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .cover h1 {
+    font-size: 52pt;
+    font-weight: 100;
+    letter-spacing: 0.15em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .cover h2 {
+    font-size: 18pt;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  .cover .bowtie {
+    width: 160px;
+    height: 70px;
+    border: 2px solid #fff;
+    clip-path: polygon(0 0, 45% 50%, 0 100%, 100% 100%, 55% 50%, 100% 0);
+    margin: 30px auto;
+  }
+  .cover .subtitle {
+    font-size: 12pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 40px;
+    opacity: 0.8;
+  }
+  .cover .author {
+    font-size: 14pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 16px;
+    font-weight: 400;
+  }
+  .cover .edition {
+    font-size: 10pt;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    opacity: 0.7;
+  }
+  .cover .based-on {
+    font-size: 9pt;
+    opacity: 0.5;
+    margin-top: 30px;
+    font-style: italic;
+  }
+
+  /* ===== CHAPTER HEADER ===== */
+  .chapter-header {
+    border: 1.5px solid #000;
+    padding: 50px 30px;
+    text-align: center;
+    margin: 60px auto 40px;
+    max-width: 500px;
+  }
+  .chapter-num {
+    font-size: 80pt;
+    font-weight: 100;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .chapter-title {
+    font-size: 14pt;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  /* ===== PART HEADER ===== */
+  .part-header {
+    border: 2px solid #000;
+    padding: 60px 30px;
+    text-align: center;
+    margin: 80px auto;
+    max-width: 500px;
+  }
+  .part-label {
+    font-size: 36pt;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .part-title {
+    font-size: 14pt;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  /* ===== SECTION LABELS ===== */
+  .section-label {
+    font-size: 8pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 6px;
+  }
+
+  /* ===== FIGURES ===== */
+  .figure {
+    margin: 28px 0;
+    border-top: 1.5px solid #000;
+    padding-top: 10px;
+  }
+  .figure-label {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+  .figure-caption {
+    font-size: 9pt;
+    font-style: italic;
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  /* ===== EXERCISES ===== */
+  .exercise {
+    margin: 28px 0;
+    page-break-inside: avoid;
+  }
+  .exercise-label {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 4px;
+  }
+  .exercise-title {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .exercise-body {
+    font-size: 10pt;
+    line-height: 1.6;
+    color: #222;
+  }
+  .exercise-body ul {
+    margin: 8px 0 8px 20px;
+  }
+  .exercise-body li {
+    margin-bottom: 4px;
+  }
+
+  /* ===== WRITE LINES ===== */
+  .write-lines {
+    margin-top: 12px;
+  }
+  .write-line {
+    border-bottom: 1px solid #bbb;
+    height: 26px;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+  .write-box {
+    border: 1px solid #bbb;
+    min-height: 80px;
+    margin-top: 10px;
+    width: 100%;
+  }
+  .write-box-tall {
+    border: 1px solid #bbb;
+    min-height: 140px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  /* ===== TABLES ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 10pt;
+  }
+  th {
+    background: #000;
+    color: #fff;
+    padding: 7px 10px;
+    text-align: left;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px dotted #ccc;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: 1px solid #999; }
+  .td-write {
+    border-bottom: 1px dotted #ccc;
+    min-height: 28px;
+  }
+  .td-empty { color: #ccc; font-style: italic; font-size: 9pt; }
+
+  /* ===== CONCEPT BOXES ===== */
+  .concept-box {
+    border: 1.5px solid #000;
+    padding: 16px 20px;
+    margin: 14px 0;
+    background: #fafafa;
+  }
+  .concept-box h4 {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .concept-box p {
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  .concept-box-dark {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .concept-box-dark h4 { color: #fff; }
+
+  /* ===== DIAGRAMS ===== */
+  .diagram-container {
+    margin: 16px 0;
+    text-align: center;
+  }
+
+  /* ARR Components */
+  .arr-components {
+    display: flex;
+    gap: 0;
+    margin: 16px 0;
+    border: 1.5px solid #000;
+  }
+  .arr-col {
+    flex: 1;
+    padding: 16px 12px;
+    text-align: center;
+    border-right: 1px solid #000;
+  }
+  .arr-col:last-child { border-right: none; }
+  .arr-col h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .arr-col p { font-size: 9pt; line-height: 1.4; color: #444; }
+
+  /* Bowtie */
+  .bowtie-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 16px 0;
+    font-size: 8pt;
+    text-align: center;
+  }
+  .bowtie-stage {
+    flex: 1;
+    border: 1px solid #000;
+    padding: 10px 4px;
+    font-size: 7.5pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bowtie-stage.dark {
+    background: #000;
+    color: #fff;
+  }
+
+  /* 6 Models grid */
+  .models-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .model-card {
+    border: 1.5px solid #000;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .model-card.dark { background: #000; color: #fff; }
+  .model-num {
+    font-size: 8pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 4px;
+  }
+  .model-card.dark .model-num { color: #aaa; }
+  .model-name {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Revenue Arc */
+  .revenue-arc {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border: 1.5px solid #000;
+    margin: 14px 0;
+    background: #fafafa;
+  }
+  .arc-item {
+    text-align: center;
+    flex: 1;
+  }
+  .arc-item h4 {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .arc-item p { font-size: 8.5pt; color: #555; margin-top: 3px; }
+  .arc-arrow {
+    font-size: 18pt;
+    color: #000;
+    padding: 0 8px;
+  }
+
+  /* Phases */
+  .phases-bar {
+    display: flex;
+    margin: 14px 0;
+    border: 1.5px solid #000;
+  }
+  .phase-item {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    border-right: 1px solid #000;
+    font-size: 9pt;
+  }
+  .phase-item:last-child { border-right: none; }
+  .phase-item.active { background: #000; color: #fff; }
+  .phase-item h4 { font-weight: 700; text-transform: uppercase; font-size: 9pt; margin-bottom: 3px; }
+  .phase-item p { font-size: 8pt; color: #555; }
+  .phase-item.active p { color: #ccc; }
+
+  /* VM Table */
+  .vm-table th { font-size: 8pt; }
+  .vm-table td { font-size: 9pt; padding: 6px 8px; }
+  .vm-badge {
+    background: #000;
+    color: #fff;
+    padding: 2px 6px;
+    font-size: 8pt;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+
+  /* Checkbox list */
+  .check-list { list-style: none; margin: 10px 0; }
+  .check-list li {
+    padding: 6px 0;
+    border-bottom: 1px dotted #ddd;
+    font-size: 10pt;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .check-list li::before {
+    content: "□";
+    font-size: 13pt;
+    color: #999;
+    flex-shrink: 0;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 30px;
+    font-size: 8pt;
+    color: #aaa;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+  }
+
+  /* Section header */
+  .section-header {
+    background: #000;
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin: 24px 0 10px;
+  }
+
+  /* Two columns */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 14px 0;
+  }
+
+  /* Numbered list */
+  .num-list { list-style: decimal; margin: 10px 0 10px 20px; }
+  .num-list li { margin-bottom: 6px; font-size: 10pt; line-height: 1.5; }
+
+  /* Benchmark table */
+  .benchmark td:first-child { font-weight: 600; }
+  .benchmark td { font-size: 9pt; }
+
+  /* Matrix 2x2 */
+  .matrix-2x2 {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    grid-template-rows: 30px 1fr 1fr;
+    gap: 2px;
+    margin: 14px 0;
+    max-width: 500px;
+  }
+  .matrix-header {
+    background: #000;
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.08em;
+  }
+  .matrix-cell {
+    border: 1px solid #999;
+    padding: 12px;
+    font-size: 9pt;
+    min-height: 70px;
+  }
+  .matrix-row-label {
+    background: #eee;
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  h2 { font-size: 14pt; margin: 20px 0 10px; font-weight: 700; }
+  h3 { font-size: 12pt; margin: 16px 0 8px; font-weight: 700; }
+  p { margin-bottom: 8px; line-height: 1.6; }
+  strong { font-weight: 700; }
+
+  .page-num {
+    text-align: right;
+    font-size: 8pt;
+    color: #999;
+    margin-top: 20px;
+  }
+
+  .key-insight {
+    border-left: 4px solid #000;
+    padding: 10px 14px;
+    margin: 14px 0;
+    background: #f8f8f8;
+    font-size: 10pt;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== PORTADA ========== -->
+<div class="cover">
+  <h1>Revenue<br>Architecture</h1>
+  <h2>Cuaderno de Trabajo</h2>
+  <div style="width:160px;height:60px;border:2px solid #fff;margin:30px auto;position:relative;overflow:hidden;">
+    <svg viewBox="0 0 160 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+      <polygon points="0,0 72,30 0,60 160,60 88,30 160,0" fill="none" stroke="white" stroke-width="2"/>
+      <line x1="64" y1="0" x2="64" y2="60" stroke="white" stroke-width="1" opacity="0.4"/>
+      <line x1="80" y1="0" x2="80" y2="60" stroke="white" stroke-width="1" opacity="0.4"/>
+      <line x1="96" y1="0" x2="96" y2="60" stroke="white" stroke-width="1" opacity="0.4"/>
+    </svg>
+  </div>
+  <p class="subtitle">Basado en el audiobook de</p>
+  <p class="author">Jacco van der Kooij</p>
+  <p class="based-on">Traducción y adaptación al español para aplicación práctica</p>
+</div>
+
+<!-- ========== INTRO ========== -->
+<div class="page page-break">
+  <div class="section-header">Cómo usar este cuaderno</div>
+
+  <p>Este cuaderno de trabajo es una guía práctica en español basada en la metodología <strong>Revenue Architecture</strong> de Jacco van der Kooij. Está diseñado para que puedas aplicar cada concepto directamente a tu empresa.</p>
+
+  <p>El libro propone una analogía poderosa: <strong>tu negocio de ingresos recurrentes es una fábrica</strong>. Una fábrica que produce ARR (Annual Recurring Revenue) a través de líneas de producción llamadas GTM motions. Para construir esa fábrica bien, necesitas tres pilares:</p>
+
+  <div class="models-grid" style="grid-template-columns:1fr 1fr 1fr;margin:20px 0;">
+    <div class="model-card">
+      <div class="model-num">Pilar 1</div>
+      <div class="model-name">Primeros Principios</div>
+      <p style="font-size:8.5pt;color:#555;margin-top:6px;">¿De dónde viene el crecimiento?</p>
+    </div>
+    <div class="model-card">
+      <div class="model-num">Pilar 2</div>
+      <div class="model-name">Modelos y Datos</div>
+      <p style="font-size:8.5pt;color:#555;margin-top:6px;">¿Podemos diseñar máquinas de crecimiento?</p>
+    </div>
+    <div class="model-card">
+      <div class="model-num">Pilar 3</div>
+      <div class="model-name">Sistemas y Procesos</div>
+      <p style="font-size:8.5pt;color:#555;margin-top:6px;">¿Cómo construimos esas máquinas?</p>
+    </div>
+  </div>
+
+  <div class="concept-box">
+    <h4>Estructura del cuaderno</h4>
+    <ul style="margin:6px 0 0 16px;font-size:10pt;line-height:1.7;">
+      <li><strong>Parte I — Fundamentos:</strong> Cap. 02 · Primeros principios / Cap. 03 · Modelos y datos / Cap. 04 · Sistemas y procesos</li>
+      <li><strong>Parte II — Diseño:</strong> Cap. 05 · El Modelo de Revenue / Cap. 06 · El Modelo de Datos / Cap. 07 · El Modelo Matemático</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:30px;">
+    <p><strong>Mi empresa:</strong></p>
+    <div class="write-line"></div>
+    <p style="margin-top:12px;"><strong>Mi rol:</strong></p>
+    <div class="write-line"></div>
+    <p style="margin-top:12px;"><strong>ARR actual (o estimado):</strong></p>
+    <div class="write-line"></div>
+    <p style="margin-top:12px;"><strong>Fase de crecimiento:</strong> &nbsp; □ Startup &nbsp;&nbsp; □ Scaleup &nbsp;&nbsp; □ Grownup</p>
+  </div>
+</div>
+
+<!-- ========== PARTE I ========== -->
+<div class="page page-break">
+  <div class="part-header">
+    <div class="part-label">Parte I</div>
+    <div class="part-title">Fundamentos</div>
+  </div>
+
+  <p style="text-align:center;font-size:10pt;color:#555;">Los tres principios científicos que forman la base de una Revenue Factory</p>
+
+  <div class="models-grid" style="grid-template-columns:1fr 1fr 1fr;margin:30px 0;">
+    <div class="model-card">
+      <div class="model-num">→</div>
+      <div class="model-name">Primeros Principios</div>
+      <p style="font-size:9pt;color:#555;margin-top:8px;">¿De dónde viene el crecimiento?</p>
+    </div>
+    <div class="model-card">
+      <div class="model-num">→</div>
+      <div class="model-name">Modelos y Datos</div>
+      <p style="font-size:9pt;color:#555;margin-top:8px;">¿Podemos diseñar máquinas de crecimiento?</p>
+    </div>
+    <div class="model-card">
+      <div class="model-num">→</div>
+      <div class="model-name">Sistemas y Procesos</div>
+      <p style="font-size:9pt;color:#555;margin-top:8px;">¿Cómo construimos esas máquinas?</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CAPÍTULO 02 ========== -->
+<div class="page page-break">
+  <div class="chapter-header">
+    <div class="chapter-num">02</div>
+    <div class="chapter-title">Primeros Principios</div>
+  </div>
+
+  <div class="concept-box">
+    <h4>Concepto clave: Los 3 componentes del ARR</h4>
+    <p>Todo crecimiento de ingresos recurrentes proviene de exactamente tres fuentes. Entender cuál domina hoy y cuál dominará mañana es el primer paso del análisis.</p>
+  </div>
+
+  <div class="arr-components">
+    <div class="arr-col">
+      <h3>Adquisición</h3>
+      <p>Nuevos clientes cerrados en el período. Crece linealmente. Impulsado por ventas.</p>
+    </div>
+    <div class="arr-col">
+      <h3>Retención</h3>
+      <p>ARR que se mantiene de períodos anteriores. Crece exponencialmente. El motor más poderoso.</p>
+    </div>
+    <div class="arr-col">
+      <h3>Expansión</h3>
+      <p>ARR adicional de clientes existentes (upsell, cross-sell). Crece exponencialmente. Alto margen.</p>
+    </div>
+  </div>
+
+  <div class="key-insight">
+    "La retención es el componente que crece de forma exponencial. A partir del año 5, eclipsa totalmente a la adquisición en la mayoría de empresas SaaS maduras."
+  </div>
+
+  <!-- EJERCICIO 2.1 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 2.1</div>
+    <div class="exercise-title">Obtén tu conjunto de datos</div>
+    <div class="exercise-body">
+      <p>Recopila los números de ingresos recurrentes y divídelos en los 3 componentes. Registra un mínimo de 8 períodos. El período puede ser un mes, trimestre o año según la duración de tu ciclo de ventas.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Período</th>
+          <th>Adquisición</th>
+          <th>Retención</th>
+          <th>Expansión</th>
+          <th>ARR Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Período 1</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 2</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 3</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 4</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 5</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 6</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 7</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 8</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 9</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Período 10</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 2.2 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 2.2</div>
+    <div class="exercise-title">Grafica los números en un gráfico de columnas</div>
+    <div class="exercise-body">
+      <p>Selecciona todos los datos y grafícalos en un gráfico de columnas agrupadas, con columnas separadas para adquisición, retención y expansión (no apiladas). Luego añade una línea de tendencia a cada serie. Busca un R² lo más cercano a 1.</p>
+      <p style="margin-top:8px;font-style:italic;color:#555;">Usa Google Sheets o Excel. En Sheets: clic derecho en la serie → "Línea de tendencia" → activa R².</p>
+    </div>
+    <div style="border:1px dashed #bbb;height:220px;margin-top:12px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:10pt;">
+      [ Pega aquí tu gráfico o dibuja a mano ]
+    </div>
+  </div>
+
+  <!-- EJERCICIO 2.3 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 2.3</div>
+    <div class="exercise-title">Añade una línea de tendencia</div>
+    <div class="exercise-body">
+      <p>Para cada serie, selecciona el tipo de tendencia (lineal, exponencial, polinomial) que obtenga el R² más alto. Un polinomio de 2° o 3er grado suele dar mejores resultados (R² ≈ 0.98 o superior).</p>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Componente</th><th>Tipo de tendencia elegida</th><th>R² obtenido</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Adquisición</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Retención</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Expansión</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 2.4 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 2.4</div>
+    <div class="exercise-title">Comprende tu fuente de crecimiento</div>
+    <div class="exercise-body">
+      <p>Estudia las líneas de tendencia y responde:</p>
+    </div>
+    <div style="margin-top:12px;">
+      <p><strong>Pregunta 1:</strong> ¿De dónde proviene la mayor parte del crecimiento hoy?</p>
+      <div class="write-line"></div><div class="write-line"></div>
+      <p style="margin-top:12px;"><strong>Pregunta 2:</strong> ¿En qué período la retención superará a la adquisición?</p>
+      <div class="write-line"></div><div class="write-line"></div>
+      <p style="margin-top:12px;"><strong>Pregunta 3:</strong> ¿En qué período la expansión superará a la adquisición?</p>
+      <div class="write-line"></div><div class="write-line"></div>
+    </div>
+  </div>
+
+  <!-- Fases de madurez -->
+  <div class="section-header" style="margin-top:30px;">Fases de crecimiento</div>
+  <div class="phases-bar">
+    <div class="phase-item">
+      <h4>Startup</h4>
+      <p>PMF → $20M ARR<br>Founder-led sales</p>
+    </div>
+    <div class="phase-item active">
+      <h4>Scaleup</h4>
+      <p>$20M → $100M ARR<br>Escalar GTM</p>
+    </div>
+    <div class="phase-item">
+      <h4>Grownup</h4>
+      <p>$100M+ ARR<br>Eficiencia + IPO</p>
+    </div>
+  </div>
+
+  <div class="exercise" style="margin-top:20px;">
+    <div class="exercise-label">Reflexión</div>
+    <div class="exercise-title">¿En qué fase estás y qué implica?</div>
+    <table>
+      <thead>
+        <tr><th>Objetivo</th><th>Directiva</th><th>Fase</th><th>¿Aplica a ti?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Producción</td><td>Acelerar crecimiento</td><td>Escalabilidad</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Eficiencia</td><td>Reducir costos</td><td>Sostenibilidad</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Calidad</td><td>Impacto recurrente</td><td>Durabilidad</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== CAPÍTULO 03 ========== -->
+<div class="page page-break">
+  <div class="chapter-header">
+    <div class="chapter-num">03</div>
+    <div class="chapter-title">Modelos y Datos</div>
+  </div>
+
+  <div class="concept-box">
+    <h4>Los 6 modelos esenciales de un negocio de ingresos recurrentes</h4>
+    <p>Al igual que la anatomía humana requiere múltiples modelos (esquelético, muscular, cardiovascular) para entenderse completamente, un negocio de suscripción necesita 6 modelos que trabajan juntos.</p>
+  </div>
+
+  <div class="models-grid">
+    <div class="model-card dark">
+      <div class="model-num" style="color:#aaa;">Modelo 1</div>
+      <div class="model-name">Modelo de Revenue</div>
+    </div>
+    <div class="model-card dark">
+      <div class="model-num" style="color:#aaa;">Modelo 2</div>
+      <div class="model-name">Modelo de Datos</div>
+    </div>
+    <div class="model-card dark">
+      <div class="model-num" style="color:#aaa;">Modelo 3</div>
+      <div class="model-name">Modelo Matemático</div>
+    </div>
+    <div class="model-card">
+      <div class="model-num">Modelo 4</div>
+      <div class="model-name">Modelo Operativo</div>
+    </div>
+    <div class="model-card">
+      <div class="model-num">Modelo 5</div>
+      <div class="model-name">Modelo de Crecimiento</div>
+    </div>
+    <div class="model-card">
+      <div class="model-num">Modelo 6</div>
+      <div class="model-name">Modelo GTM</div>
+    </div>
+  </div>
+
+  <div style="margin:16px 0;">
+    <table>
+      <thead>
+        <tr><th>Tipo</th><th>Modelos</th><th>Característica</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Estáticos</strong></td>
+          <td>1. Revenue, 2. Datos, 3. Matemático</td>
+          <td>Configúralos una vez. Cambiarlos tiene consecuencias profundas.</td>
+        </tr>
+        <tr>
+          <td><strong>Dinámicos</strong></td>
+          <td>4. Operativo, 5. Crecimiento, 6. GTM</td>
+          <td>Cambian con el tiempo. Se optimizan continuamente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 3.1 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 3.1</div>
+    <div class="exercise-title">Crecer de $10M a $30M en ARR: ¿qué modelos se ven afectados?</div>
+    <table>
+      <thead>
+        <tr><th>Modelo</th><th>¿Afectado?</th><th>¿Cómo se ve afectado en tu empresa?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Modelo de Revenue</td><td style="width:80px;">□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>2. Modelo de Datos</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>3. Modelo Matemático</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>4. Modelo Operativo</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>5. Modelo de Crecimiento</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>6. Modelo GTM</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 3.2 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 3.2</div>
+    <div class="exercise-title">Cambiar de perpetuo a suscripción: ¿qué modelos se ven afectados?</div>
+    <table>
+      <thead>
+        <tr><th>Modelo</th><th>¿Afectado?</th><th>¿Cómo se ve afectado en tu empresa?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Modelo de Revenue</td><td style="width:80px;">□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>2. Modelo de Datos</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>3. Modelo Matemático</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>4. Modelo Operativo</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>5. Modelo de Crecimiento</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>6. Modelo GTM</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 3.3 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 3.3</div>
+    <div class="exercise-title">Lanzar un nuevo GTM motion: ¿qué modelos se ven afectados?</div>
+    <table>
+      <thead>
+        <tr><th>Modelo</th><th>¿Afectado?</th><th>¿Cómo se ve afectado en tu empresa?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Modelo de Revenue</td><td style="width:80px;">□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>2. Modelo de Datos</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>3. Modelo Matemático</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>4. Modelo Operativo</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>5. Modelo de Crecimiento</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>6. Modelo GTM</td><td>□ Sí</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 3.4 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 3.4</div>
+    <div class="exercise-title">Conecta cada modelo con su métrica clave</div>
+    <div class="exercise-body">
+      <p>Traza líneas conectando cada modelo (izquierda) con la métrica que le corresponde (derecha).</p>
+    </div>
+    <div class="two-col" style="margin-top:12px;">
+      <div>
+        <p style="font-size:9pt;font-weight:700;margin-bottom:6px;">MODELOS</p>
+        <ol style="font-size:10pt;line-height:2.2;">
+          <li>Modelo de Revenue</li>
+          <li>Modelo de Datos</li>
+          <li>Modelo Matemático</li>
+          <li>Modelo Operativo</li>
+          <li>Modelo de Crecimiento</li>
+          <li>Modelo GTM</li>
+        </ol>
+      </div>
+      <div>
+        <p style="font-size:9pt;font-weight:700;margin-bottom:6px;">MÉTRICAS</p>
+        <ol style="list-style:upper-alpha;font-size:10pt;line-height:2.2;">
+          <li>Tasa de crecimiento (ARR)</li>
+          <li>Métricas de conversión (CR)</li>
+          <li>Métricas de productividad</li>
+          <li>Fórmula de crecimiento</li>
+          <li>Penetración de mercado</li>
+          <li>Pricing / estructura de pago</li>
+        </ol>
+      </div>
+    </div>
+    <p style="font-size:9pt;color:#555;margin-top:8px;font-style:italic;">Respuestas correctas: 1-F · 2-B · 3-D · 4-C · 5-A · 6-E</p>
+  </div>
+</div>
+
+<!-- ========== CAPÍTULO 04 ========== -->
+<div class="page page-break">
+  <div class="chapter-header">
+    <div class="chapter-num">04</div>
+    <div class="chapter-title">Sistemas y Procesos</div>
+  </div>
+
+  <div class="concept-box">
+    <h4>El Bowtie: el sistema GTM completo</h4>
+    <p>El embudo clásico de marketing y ventas solo cubre la adquisición. El Bowtie extiende ese embudo para cubrir todo el ciclo de vida del cliente, incluyendo retención y expansión. Sin esto, los ingresos recurrentes no tienen base.</p>
+  </div>
+
+  <!-- Bowtie diagram -->
+  <div class="figure">
+    <span class="figure-label">El Bowtie GTM</span>
+    <div class="bowtie-diagram" style="margin-top:12px;">
+      <div class="bowtie-stage">Conciencia</div>
+      <div class="bowtie-stage">Educación</div>
+      <div class="bowtie-stage">Selección</div>
+      <div class="bowtie-stage dark">Commit<br>Mutuo</div>
+      <div class="bowtie-stage">Onboarding</div>
+      <div class="bowtie-stage">Retención</div>
+      <div class="bowtie-stage">Expansión</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:8pt;color:#555;margin-top:4px;padding:0 2px;">
+      <span style="text-align:center;flex:3;">← ADQUISICIÓN (Dominio de Valor) →</span>
+      <span style="text-align:center;flex:3;">← RETENCIÓN Y EXPANSIÓN (Dominio de Impacto) →</span>
+    </div>
+    <p style="font-size:8.5pt;color:#555;margin-top:6px;font-style:italic;">"Los ingresos recurrentes son lo que obtienes cuando entregas impacto recurrente."</p>
+  </div>
+
+  <div class="concept-box" style="margin-top:16px;">
+    <h4>People-centric vs. Process-centric</h4>
+    <div class="two-col" style="margin-top:8px;">
+      <div>
+        <p style="font-size:9pt;"><strong>People-centric (inestable)</strong><br>Usa tecnología y procesos para gestionar personas. Se desestabiliza al crecer. El problema se "arregla contratando."</p>
+      </div>
+      <div>
+        <p style="font-size:9pt;"><strong>Process-centric (estable)</strong><br>Usa personas y tecnología para inspeccionar el proceso. Se estabiliza al crecer. El problema se "arregla mejorando el proceso."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 4.1 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 4.1</div>
+    <div class="exercise-title">Identifica las funciones GTM clave para tus ingresos recurrentes</div>
+    <div class="exercise-body">
+      <p>Lista las funciones GTM cruciales para generar tus ingresos recurrentes. Considera un GTM motion específico o toda tu empresa.</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Función GTM</th>
+          <th>Proceso actual en uso</th>
+          <th>Herramientas utilizadas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-empty">Ej: Ventas</td><td class="td-empty">Ej: Challenger Sale</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 4.2 / 4.3 ya integrados en tabla anterior -->
+
+  <!-- EJERCICIO 4.4 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 4.4</div>
+    <div class="exercise-title">Dibuja tus loops cerrados (closed loops) clave</div>
+    <div class="exercise-body">
+      <p>Los sistemas de ingresos recurrentes no son lineales: tienen bucles de retroalimentación. Presta atención a dónde comienzan y terminan estos bucles, ya que indica qué área de tu organización debe gestionarlos.</p>
+    </div>
+    <div style="border:1px solid #ccc;padding:16px;margin-top:12px;">
+      <div class="bowtie-diagram" style="margin-bottom:20px;">
+        <div class="bowtie-stage" style="font-size:7pt;">Conciencia</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Educación</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Selección</div>
+        <div class="bowtie-stage dark" style="font-size:7pt;">Commit</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Onboarding</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Retención</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Expansión</div>
+      </div>
+      <p style="font-size:8.5pt;color:#888;text-align:center;">Dibuja arcos debajo del Bowtie representando tus closed loops. Numera cada uno.</p>
+      <div style="height:80px;"></div>
+    </div>
+
+    <table style="margin-top:14px;">
+      <thead>
+        <tr><th>#</th><th>Nombre del Loop</th><th>Descripción</th><th>Responsable</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-empty">1</td><td class="td-empty">Ej: Advocacy</td><td class="td-empty">Clientes existentes postean en redes</td><td class="td-empty">Marketing</td></tr>
+        <tr><td>2</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>3</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>4</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>5</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== PARTE II ========== -->
+<div class="page page-break">
+  <div class="part-header">
+    <div class="part-label">Parte II</div>
+    <div class="part-title">Diseño</div>
+  </div>
+
+  <p style="text-align:center;font-size:10pt;color:#555;margin:20px 0;">Los modelos estáticos forman la base del sistema. Una vez bien diseñados, requieren mínimos ajustes.</p>
+
+  <div style="border:1.5px solid #000;padding:20px 30px;margin:20px 0;">
+    <div style="margin-bottom:10px;font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#555;">Modelos dinámicos</div>
+    <table style="margin:0;">
+      <tr><td style="padding:6px 0;border-bottom:1px solid #eee;font-size:10pt;"><strong>6. Modelo GTM</strong></td><td style="font-size:9pt;color:#555;">→ Múltiples GTM motions</td></tr>
+      <tr><td style="padding:6px 0;border-bottom:1px solid #eee;font-size:10pt;"><strong>5. Modelo de Crecimiento</strong></td><td style="font-size:9pt;color:#555;">→ Crecimiento no sostenible si falla la base</td></tr>
+      <tr><td style="padding:6px 0;border-bottom:1px solid #000;font-size:10pt;"><strong>4. Modelo Operativo</strong></td><td style="font-size:9pt;color:#555;">→ Operación incorrecta del negocio</td></tr>
+    </table>
+    <div style="margin:10px 0;font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#555;">Modelos estáticos</div>
+    <table style="margin:0;background:#000;color:#fff;">
+      <tr><td style="padding:6px 10px;border-bottom:1px solid #444;font-size:10pt;color:#fff;"><strong>3. Modelo Matemático</strong></td><td style="font-size:9pt;color:#aaa;">→ Fórmula de crecimiento incorrecta</td></tr>
+      <tr><td style="padding:6px 10px;border-bottom:1px solid #444;font-size:10pt;color:#fff;"><strong>2. Modelo de Datos</strong></td><td style="font-size:9pt;color:#aaa;">→ Mide los datos incorrectos</td></tr>
+      <tr><td style="padding:6px 10px;font-size:10pt;color:#fff;"><strong>1. Modelo de Revenue</strong></td><td style="font-size:9pt;color:#aaa;">→ Primeros principios incorrectos</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ========== CAPÍTULO 05 ========== -->
+<div class="page page-break">
+  <div class="chapter-header">
+    <div class="chapter-num">05</div>
+    <div class="chapter-title">El Modelo de Revenue</div>
+  </div>
+
+  <div class="concept-box">
+    <h4>El arco de monetización</h4>
+    <p>Todas las estrategias de monetización se ubican en un arco que va de <strong>Ownership</strong> (el comprador paga por adelantado) a <strong>Consumption</strong> (el vendedor asume todo el riesgo). En el centro está la <strong>Suscripción</strong>. El punto donde se ubica tu empresa determina métricas esperadas, velocidad de revenue, tasa de retención y distribución del riesgo.</p>
+  </div>
+
+  <!-- Revenue Arc visual -->
+  <div style="border:1.5px solid #000;padding:20px;margin:16px 0;text-align:center;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+      <div style="text-align:left;max-width:180px;">
+        <p style="font-weight:700;font-size:10pt;text-transform:uppercase;letter-spacing:0.08em;">Ownership</p>
+        <p style="font-size:8.5pt;color:#555;">El comprador asume todo el riesgo. Paga por adelantado.</p>
+        <p style="font-size:8pt;color:#888;margin-top:4px;">• Hardware<br>• Software perpetuo<br>• Hardware + soporte</p>
+      </div>
+      <div style="text-align:center;max-width:200px;">
+        <p style="font-weight:700;font-size:10pt;text-transform:uppercase;letter-spacing:0.08em;">Suscripción</p>
+        <p style="font-size:8.5pt;color:#555;">Riesgo compartido. Pago periódico.</p>
+        <p style="font-size:8pt;color:#888;margin-top:4px;">• SaaS multi-año<br>• SaaS anual<br>• SaaS mensual</p>
+      </div>
+      <div style="text-align:right;max-width:180px;">
+        <p style="font-weight:700;font-size:10pt;text-transform:uppercase;letter-spacing:0.08em;">Consumption</p>
+        <p style="font-size:8.5pt;color:#555;">El vendedor asume todo el riesgo. "Sin cura, sin pago."</p>
+        <p style="font-size:8pt;color:#888;margin-top:4px;">• Pay per use<br>• Pay per action<br>• Pay upon impact</p>
+      </div>
+    </div>
+    <div style="background:#000;height:6px;border-radius:3px;margin:0 30px;"></div>
+    <div style="display:flex;justify-content:space-between;font-size:8pt;color:#999;padding:4px 20px 0;">
+      <span>VALOR</span>
+      <span>IMPACTO</span>
+    </div>
+  </div>
+
+  <div class="figure">
+    <div class="figure-caption">Impacto de la estrategia de monetización en métricas clave</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th>Ownership</th>
+          <th>Suscripción Anual</th>
+          <th>Suscripción Mensual</th>
+          <th>Consumption</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Precio año 1</td><td>$1,000,000s</td><td>$10,000s</td><td>$1,000s</td><td>$100s</td></tr>
+        <tr><td>Win rate</td><td>1:3 (33%)</td><td>1:5 (20%)</td><td>1:6 (17%)</td><td>1:10 (10%)</td></tr>
+        <tr><td>Ciclo de ventas</td><td>9-18 meses</td><td>30+ días</td><td>10+ días</td><td>1+ día</td></tr>
+        <tr><td>Retención esperada</td><td>100%</td><td>&gt;90%</td><td>&gt;78%</td><td>Variable</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 5.1 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 5.1</div>
+    <div class="exercise-title">Identifica tu estrategia de monetización</div>
+    <div class="exercise-body">
+      <p>En el arco de abajo, traza una flecha desde el centro hacia cada estrategia de monetización que utilizas actualmente.</p>
+    </div>
+    <div style="border:1.5px solid #ccc;padding:20px;margin:12px 0;min-height:140px;position:relative;">
+      <div style="display:flex;justify-content:space-between;font-size:8pt;font-weight:700;text-transform:uppercase;">
+        <span>OWNERSHIP<br><span style="font-weight:400;color:#555">VALOR</span></span>
+        <span style="text-align:center;">SUSCRIPCIÓN<br><span style="font-weight:400;color:#555">Alta velocidad</span></span>
+        <span style="text-align:right;">CONSUMPTION<br><span style="font-weight:400;color:#555">IMPACTO</span></span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap;">
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">Hardware</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">Software perpetuo</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">SaaS multi-año</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">SaaS anual</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">SaaS mensual</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">Pay per use</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">Pay per action</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">Pay upon impact</span>
+        <span style="border:1px solid #ccc;padding:3px 8px;font-size:8pt;">Freemium</span>
+      </div>
+      <p style="font-size:9pt;">Fundamentalmente usas una estrategia de monetización basada en: <span style="border-bottom:1px solid #000;display:inline-block;width:200px;">&nbsp;</span></p>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 5.2 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 5.2</div>
+    <div class="exercise-title">Compara tus métricas con el benchmark de tu modelo</div>
+    <div class="exercise-body">
+      <p>Basado en tu estrategia de monetización, benchmarkea tus métricas clave y verifica si están alineadas con las características esperadas.</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ARR: ________ &nbsp;&nbsp; ACV/GTM Motion: ________</th>
+          <th>Métrica esperada (benchmark)</th>
+          <th>Tu métrica hoy</th>
+          <th>¿Dentro del rango?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Win Rate</td>
+          <td class="td-write">&nbsp;</td>
+          <td class="td-write">&nbsp;</td>
+          <td>□ Sí &nbsp; □ No</td>
+        </tr>
+        <tr>
+          <td>Aceleración de Revenue (ciclo de ventas)</td>
+          <td class="td-write">&nbsp;</td>
+          <td class="td-write">&nbsp;</td>
+          <td>□ Sí &nbsp; □ No</td>
+        </tr>
+        <tr>
+          <td>Tasa de Retención (GRR)</td>
+          <td class="td-write">&nbsp;</td>
+          <td class="td-write">&nbsp;</td>
+          <td>□ Sí &nbsp; □ No</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 5.3 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 5.3</div>
+    <div class="exercise-title">¿Operas con más de una estrategia de monetización?</div>
+    <div class="exercise-body">
+      <p>Empresas con menos de $100M en ARR recurrente generalmente no deberían tener distintos tipos de monetización (ej. ownership + suscripción). Puedes tener variantes dentro del mismo tipo (mensual vs. anual), pero no tipos distintos.</p>
+    </div>
+    <p style="margin-top:10px;">¿Cuántas estrategias de monetización usas actualmente? <span style="border-bottom:1px solid #000;display:inline-block;width:60px;">&nbsp;</span></p>
+    <p style="margin-top:8px;">¿Están alineadas o son conflictivas? Explica:</p>
+    <div class="write-lines">
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 5.4 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 5.4</div>
+    <div class="exercise-title">¿Usas las métricas correctas para tu estrategia?</div>
+    <div class="exercise-body">
+      <p>Error común: empresas con productos de suscripción ($20k-$50k/año) que operan con una pipeline de 3x (característica de Ownership), cuando deberían operar con 5x (Suscripción).</p>
+    </div>
+    <p style="margin-top:10px;">¿Hay métricas en tu empresa que vienen de un modelo de monetización diferente al que usas? Ejemplo:</p>
+    <div class="write-lines">
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 5.5 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 5.5</div>
+    <div class="exercise-title">¿Tu enfoque de revenue está alineado en todas las funciones GTM?</div>
+    <div class="exercise-body">
+      <p>Error típico: la empresa vende suscripciones mensuales, pero ventas trabaja con una pipeline de 3x (ownership), Customer Success reporta retención anual, y marketing se enfoca en lead gen en vez de customer marketing.</p>
+    </div>
+    <table style="margin-top:10px;">
+      <thead>
+        <tr><th>Función</th><th>¿Usa métricas del modelo correcto?</th><th>Desalineación identificada</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Marketing</td><td>□ Sí &nbsp; □ No</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Ventas</td><td>□ Sí &nbsp; □ No</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Customer Success</td><td>□ Sí &nbsp; □ No</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Producto</td><td>□ Sí &nbsp; □ No</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== CAPÍTULO 06 ========== -->
+<div class="page page-break">
+  <div class="chapter-header">
+    <div class="chapter-num">06</div>
+    <div class="chapter-title">El Modelo de Datos</div>
+  </div>
+
+  <div class="concept-box">
+    <h4>El Bowtie como modelo de datos estandarizado</h4>
+    <p>El Bowtie es el modelo de datos estándar para negocios de ingresos recurrentes. Define 9 métricas de volumen (VM), 9 métricas de conversión (CR) y 9 métricas de tiempo (Δt) a lo largo del viaje del cliente.</p>
+  </div>
+
+  <div class="section-header">Métricas de Volumen (VM) — "¿Cuántos?"</div>
+  <table class="vm-table">
+    <thead>
+      <tr>
+        <th>Métrica</th>
+        <th>Descripción</th>
+        <th>Ejemplo común</th>
+        <th>Tu nombre interno</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="vm-badge">VM1</span></td><td>Coincide con perfil objetivo (SPI)</td><td>Prospect</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM2</span></td><td>Expresa interés y da contacto</td><td>MQL</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM3</span></td><td>Siente suficiente dolor para actuar</td><td>SQL</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM4</span></td><td>Prioridad verificada, sin acción = consecuencia</td><td>SAL / Opp. calificada</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM5</span></td><td>Número de compromisos mutuos (wins)</td><td>Wins / Closed Won</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM6</span></td><td>Monto de revenue comprometido</td><td>MRR comprometido</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM7</span></td><td>Revenue comprometido menos churn de onboarding</td><td>MRR start</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM8</span></td><td>Revenue recurrente mensual/anual</td><td>MRR / ARR</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><span class="vm-badge">VM9</span></td><td>Revenue total generado durante toda la vida</td><td>LTV</td><td class="td-write">&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-header" style="margin-top:24px;">Métricas de Conversión (CR) — "¿Qué tan eficiente?"</div>
+  <table class="vm-table">
+    <thead>
+      <tr>
+        <th>Métrica</th>
+        <th>Etapa</th>
+        <th>Descripción</th>
+        <th>Tu valor actual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>CR1</strong></td><td>Conciencia</td><td>% de prospectos que se convierten en leads</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR2</strong></td><td>Educación</td><td>Efectividad de campañas de nurturing</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR3</strong></td><td>Priorización</td><td>% de leads que se califican como oportunidad</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR4</strong></td><td>Venta</td><td><strong>Win rate</strong> — oportunidades calificadas → compromiso</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR5</strong></td><td>Commit</td><td>Revenue comprometido (precio lista - descuento)</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR6</strong></td><td>Onboarding</td><td>% de clientes onboardeados exitosamente (1 - churn)</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR7</strong></td><td>Retención</td><td><strong>GRR</strong> — gross revenue retention</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>CR8</strong></td><td>Expansión</td><td>Nuevo ARR de upsell/cross-sell en año 1</td><td class="td-write">&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-header" style="margin-top:24px;">Métricas de Tiempo (Δt) — "¿Qué tan rápido?"</div>
+  <table class="vm-table">
+    <thead>
+      <tr>
+        <th>Métrica</th>
+        <th>Etapa</th>
+        <th>Descripción</th>
+        <th>Tu valor actual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Δt1</strong></td><td>Conciencia</td><td>Tiempo para desarrollar una conversación con un prospecto</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>Δt3</strong></td><td>Priorización</td><td>Tiempo para calificar oportunidad basado en prioridad</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>Δt4</strong></td><td>Venta</td><td>Duración del ciclo de ventas</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>Δt6</strong></td><td>Onboarding</td><td>Tiempo hasta el primer impacto (time-to-value)</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>Δt7</strong></td><td>Retención</td><td>Duración del contrato (mensual o anual)</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td><strong>Δt8</strong></td><td>Expansión</td><td>Lifetime del cliente (medido en años)</td><td class="td-write">&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <!-- EJERCICIO 6.1 -->
+  <div class="exercise" style="margin-top:24px;">
+    <div class="exercise-label">Ejercicio 6.1</div>
+    <div class="exercise-title">Convierte tu funnel en un Bowtie</div>
+    <div class="exercise-body">
+      <p><strong>Colaboración de equipo:</strong> Reúne a todo el equipo GTM y dibuja el Bowtie. Comienza asignando departamentos y sus funciones dentro del modelo.</p>
+      <p style="margin-top:6px;"><strong>Identificación de métricas:</strong> Identifica e ilustra las métricas clave relevantes para tu negocio. Determina qué se mide y dónde. Si el win rate se mide desde VM3 o VM4, dibuja una flecha para indicarlo.</p>
+    </div>
+
+    <div style="border:1px solid #ccc;padding:16px;margin:12px 0;">
+      <!-- Bowtie con VMs -->
+      <div style="font-size:8pt;font-weight:700;text-align:center;margin-bottom:8px;">ADQUISICIÓN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RETENCIÓN Y EXPANSIÓN</div>
+      <div class="bowtie-diagram">
+        <div class="bowtie-stage" style="font-size:7pt;">Conciencia</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Educación</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Selección</div>
+        <div class="bowtie-stage dark" style="font-size:7pt;">Commit</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Onboarding</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Retención</div>
+        <div class="bowtie-stage" style="font-size:7pt;">Expansión</div>
+      </div>
+      <div style="display:flex;gap:2px;margin-top:4px;">
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM1<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM2<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM3<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM4<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM5<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM6<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM7<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM8<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+        <div style="flex:1;text-align:center;font-size:7pt;color:#888;">VM9<br><span style="border-bottom:1px solid #ccc;display:block;height:18px;margin:0 4px;"></span></div>
+      </div>
+      <p style="font-size:8pt;color:#999;text-align:center;margin-top:8px;">Errores comunes a evitar: definiciones inconsistentes entre departamentos · mismo término en líneas de tiempo distintas · confundir GRR con NRR</p>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 6.2 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 6.2</div>
+    <div class="exercise-title">Normalización: establece el modelo de datos estándar para tu empresa</div>
+    <div class="exercise-body">
+      <p>Define claramente cada métrica en formato tabular. Comienza con métricas de volumen, luego conversión, y finalmente tiempo.</p>
+    </div>
+    <p style="font-size:9pt;margin:8px 0 4px;"><strong>GTM Motion:</strong> <span style="border-bottom:1px solid #000;display:inline-block;width:200px;">&nbsp;</span></p>
+    <table>
+      <thead>
+        <tr><th>Posición Bowtie</th><th>Acrónimo / Nombre interno</th><th>Definición oficial para tu empresa</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>VM1</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM2</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM3</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM4</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM5</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM6</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM7</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>VM8</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 6.3 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 6.3</div>
+    <div class="exercise-title">Benchmark de tus métricas</div>
+    <div class="exercise-body">
+      <p>Aplica tu ACV (Annual Contract Value) para obtener el benchmark apropiado. La siguiente tabla resume referencias de la industria SaaS:</p>
+    </div>
+    <table class="benchmark" style="font-size:8.5pt;">
+      <thead>
+        <tr>
+          <th>ACV (precio)</th>
+          <th>CR1<br>Prospect→Lead</th>
+          <th>CR2<br>Lead→Oppty</th>
+          <th>CR3<br>Oppty→Calif.</th>
+          <th>CR4<br>Win rate</th>
+          <th>CR6<br>1-Onb.Churn</th>
+          <th>CR7<br>GRR</th>
+          <th>CR8<br>Expansión</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Hasta $1k</td><td>5%</td><td>10%</td><td>65%</td><td>15%</td><td>90%</td><td>90%</td><td>5%</td></tr>
+        <tr><td>Hasta $5k</td><td>7%</td><td>12%</td><td>70%</td><td>17%</td><td>92%</td><td>92%</td><td>10%</td></tr>
+        <tr><td>Hasta $15k</td><td>8%</td><td>15%</td><td>80%</td><td>20%</td><td>93%</td><td>95%</td><td>15%</td></tr>
+        <tr><td>Hasta $50k</td><td>9%</td><td>18%</td><td>90%</td><td>25%</td><td>94%</td><td>96%</td><td>20%</td></tr>
+        <tr><td>Hasta $150k</td><td>10%</td><td>20%</td><td>95%</td><td>30%</td><td>98%</td><td>97%</td><td>25%</td></tr>
+        <tr><td>Más de $150k</td><td>n/a</td><td>n/a</td><td>100%</td><td>35%</td><td>99%</td><td>98%</td><td>30%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:9pt;margin-top:10px;"><strong>Mi ACV:</strong> <span style="border-bottom:1px solid #000;display:inline-block;width:100px;">&nbsp;</span> &nbsp;&nbsp; Mis métricas vs. benchmark:</p>
+    <table>
+      <thead>
+        <tr><th>Métrica</th><th>Benchmark esperado</th><th>Mi valor actual</th><th>Brecha</th><th>Acción prioritaria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CR3 (calificación)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR4 (win rate)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR7 (GRR)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR8 (expansión)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EJERCICIO 6.4 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 6.4</div>
+    <div class="exercise-title">Establece líneas de tendencia de tus métricas</div>
+    <div class="exercise-body">
+      <p>Benchmarkea tu rendimiento creando una línea de tendencia. Elige el intervalo temporal apropiado para tu ciclo de ventas. Por ejemplo, si tu GTM motion es High Touch y el ciclo de ventas es 9 meses, usa intervalos trimestrales.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+      <div style="border:1px solid #ccc;padding:12px;min-height:140px;">
+        <p style="font-size:9pt;font-weight:700;margin-bottom:6px;">Métrica A: <span style="border-bottom:1px solid #ccc;display:inline-block;width:80px;">&nbsp;</span></p>
+        <div style="height:80px;border-bottom:1px solid #ccc;position:relative;">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:#ddd;"></div>
+          <p style="font-size:7pt;color:#aaa;text-align:center;margin-top:30px;">[ Dibuja o pega tu gráfico aquí ]</p>
+        </div>
+        <p style="font-size:8pt;color:#999;margin-top:4px;">Benchmark: <span style="border-bottom:1px solid #ccc;display:inline-block;width:60px;">&nbsp;</span></p>
+      </div>
+      <div style="border:1px solid #ccc;padding:12px;min-height:140px;">
+        <p style="font-size:9pt;font-weight:700;margin-bottom:6px;">Métrica B: <span style="border-bottom:1px solid #ccc;display:inline-block;width:80px;">&nbsp;</span></p>
+        <div style="height:80px;border-bottom:1px solid #ccc;position:relative;">
+          <p style="font-size:7pt;color:#aaa;text-align:center;margin-top:30px;">[ Dibuja o pega tu gráfico aquí ]</p>
+        </div>
+        <p style="font-size:8pt;color:#999;margin-top:4px;">Benchmark: <span style="border-bottom:1px solid #ccc;display:inline-block;width:60px;">&nbsp;</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 6.5 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 6.5</div>
+    <div class="exercise-title">Convierte los datos en acciones: Matriz 2x2</div>
+    <div class="exercise-body">
+      <p>Construye una matriz 2x2 para comparar dos métricas y definir acciones para cada cuadrante. Ejemplo: tiempo de onboarding (eje X) vs. churn de onboarding (eje Y).</p>
+    </div>
+    <p style="font-size:9pt;margin:10px 0 6px;">Métricas a comparar: <strong>Métrica X:</strong> <span style="border-bottom:1px solid #000;display:inline-block;width:120px;">&nbsp;</span> &nbsp;&nbsp; <strong>Métrica Y:</strong> <span style="border-bottom:1px solid #000;display:inline-block;width:120px;">&nbsp;</span></p>
+    <div style="display:grid;grid-template-columns:80px 1fr 1fr;grid-template-rows:30px 1fr 1fr;gap:2px;max-width:500px;">
+      <div></div>
+      <div style="background:#000;color:#fff;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;text-transform:uppercase;">MALO</div>
+      <div style="background:#000;color:#fff;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;text-transform:uppercase;">BUENO</div>
+      <div style="background:#eee;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;text-transform:uppercase;padding:4px;">BUENO</div>
+      <div style="border:1px solid #999;padding:10px;font-size:9pt;min-height:70px;" class="td-write">&nbsp;</div>
+      <div style="border:1px solid #999;padding:10px;font-size:9pt;min-height:70px;" class="td-write">&nbsp;</div>
+      <div style="background:#eee;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;text-transform:uppercase;padding:4px;">MALO</div>
+      <div style="border:1px solid #999;padding:10px;font-size:9pt;min-height:70px;" class="td-write">&nbsp;</div>
+      <div style="border:1px solid #999;padding:10px;font-size:9pt;min-height:70px;" class="td-write">&nbsp;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CAPÍTULO 07 ========== -->
+<div class="page page-break">
+  <div class="chapter-header">
+    <div class="chapter-num">07</div>
+    <div class="chapter-title">El Modelo Matemático</div>
+  </div>
+
+  <div class="concept-box">
+    <h4>Dos principios matemáticos fundamentales del Bowtie</h4>
+    <div class="two-col" style="margin-top:10px;">
+      <div>
+        <p style="font-size:9.5pt;"><strong>Adquisición: PRODUCTO (π)</strong><br>El revenue de adquisición es el resultado de multiplicar el input (VM1) por múltiples tasas de conversión. El impacto es no lineal (exponencial inverso).</p>
+        <div style="background:#f0f0f0;padding:10px;margin-top:8px;font-size:10pt;text-align:center;font-style:italic;">
+          ARR = VM1 × CR1 × CR2 × CR3 × CR4 × Precio
+        </div>
+      </div>
+      <div>
+        <p style="font-size:9.5pt;"><strong>Retención y Expansión: SUMA (Σ)</strong><br>El revenue de retención/expansión se acumula año tras año. Agregar un porcentaje del total anterior genera crecimiento exponencial.</p>
+        <div style="background:#f0f0f0;padding:10px;margin-top:8px;font-size:10pt;text-align:center;font-style:italic;">
+          LTV = Σ ARR(t), t = 1 a lifetime
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key-insight">
+    "Una mejora del 5% en la tasa de conversión de cada reunión (de 85% a 90%) puede casi duplicar los cierres mensuales. El impacto es no lineal."
+  </div>
+
+  <div class="figure">
+    <div class="figure-caption">Ejemplo del impacto no lineal de mejorar el CR por reunión</div>
+    <table>
+      <thead>
+        <tr><th>Escenario</th><th>Opps calificadas</th><th>CR por reunión</th><th>N° reuniones</th><th>Commits</th><th>ARR (@$40k)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Base (7a)</td><td>20</td><td>85%</td><td>12</td><td>2.85</td><td>$113,793</td></tr>
+        <tr><td>Mejorado (7b)</td><td>20</td><td>90%</td><td>12</td><td>5.60</td><td>$225,944</td></tr>
+        <tr><td>Menos reuniones (7c)</td><td>20</td><td>90%</td><td>13</td><td>5.10</td><td>$203,349</td></tr>
+        <tr style="background:#f0f0f0;"><td><strong>Óptimo (7d)</strong></td><td>20</td><td>90%</td><td><strong>11</strong></td><td><strong>6.30</strong></td><td><strong>$251,049</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:8.5pt;color:#555;font-style:italic;margin-top:6px;">Conclusión: mejorar el CR de 85% a 90% duplica casi el revenue. Reducir una reunión del ciclo (de 12 a 11) también lo incrementa.</p>
+  </div>
+
+  <!-- EJERCICIO 7.1 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 7.1</div>
+    <div class="exercise-title">Calcula tu fórmula de adquisición</div>
+    <div class="exercise-body">
+      <p>Usa los datos de tu Data Model (Ejercicio 6.2) para calcular cuántos commits (wins) esperas por período dado tu pipeline actual.</p>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Descripción</th><th>Tu valor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>VM1 (input)</td><td>Prospectos por período</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR1</td><td>% Prospect → Lead</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR2</td><td>% Lead → Oportunidad</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR3</td><td>% Opp → Calificada</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>CR4</td><td>Win rate</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>ACV</td><td>Precio promedio por deal</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+    <div style="background:#f8f8f8;border:1px solid #ccc;padding:14px;margin-top:12px;">
+      <p style="font-size:10pt;"><strong>Fórmula:</strong> Commits = VM1 × CR1 × CR2 × CR3 × CR4</p>
+      <p style="font-size:10pt;margin-top:8px;"><strong>Commits por período:</strong> _____ × _____ × _____ × _____ × _____ = <span style="border-bottom:2px solid #000;display:inline-block;width:60px;font-weight:700;">&nbsp;</span></p>
+      <p style="font-size:10pt;margin-top:8px;"><strong>ARR nuevo por período:</strong> Commits × ACV = _____ × _____ = <span style="border-bottom:2px solid #000;display:inline-block;width:80px;font-weight:700;">&nbsp;</span></p>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 7.2 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 7.2</div>
+    <div class="exercise-title">Simulación: ¿qué palanca tiene más impacto?</div>
+    <div class="exercise-body">
+      <p>Analiza qué ocurre si mejoras cada variable un 10%. Esto te ayuda a priorizar en qué invertir.</p>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Palanca</th><th>Cambio (+10%)</th><th>Nuevo valor</th><th>Commits resultantes</th><th>Incremento en ARR</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>+10% VM1 (más prospectos)</td><td>+10% leads</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>+10% CR3 (mejor calificación)</td><td>+10% calificados</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>+10% CR4 (mejor win rate)</td><td>+10% win rate</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>+10% ACV (precio más alto)</td><td>+10% precio</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>-1 reunión en ciclo de ventas</td><td>Δt4 más corto</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;">
+      <p><strong>La palanca con mayor impacto en mi empresa es:</strong></p>
+      <div class="write-line"></div>
+      <p style="margin-top:10px;"><strong>Plan de acción para mejorar esta palanca:</strong></p>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO 7.3 -->
+  <div class="exercise">
+    <div class="exercise-label">Ejercicio 7.3</div>
+    <div class="exercise-title">Calcula tu fórmula de retención y LTV</div>
+    <div class="exercise-body">
+      <p>La retención acumula ARR año a año. Con un GRR del 90% y NRR de 110%, el LTV a 5 años es muy distinto al de GRR 80%.</p>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Descripción</th><th>Tu valor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ARR Año 1 (cohorte)</td><td>Revenue del grupo de clientes captados</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>GRR (CR7)</td><td>Gross Revenue Retention anual</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>NRR</td><td>Net Revenue Retention (incluye expansión)</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+    <table style="margin-top:12px;">
+      <thead>
+        <tr><th>Año</th><th>ARR cohorte (GRR)</th><th>ARR cohorte (NRR)</th><th>Diferencia acumulada</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Año 1</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Año 2</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Año 3</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Año 4</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td>Año 5</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+        <tr><td style="font-weight:700;">LTV 5 años</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ========== PÁGINA DE SÍNTESIS ========== -->
+<div class="page page-break">
+  <div class="section-header">Síntesis: Mi Revenue Architecture</div>
+
+  <p style="margin-bottom:16px;">Completa este resumen ejecutivo luego de terminar todos los capítulos. Representa el "plano" de tu revenue factory.</p>
+
+  <h3>1. Primeros Principios</h3>
+  <p>Mi mayor fuente de crecimiento hoy es: &nbsp; □ Adquisición &nbsp;&nbsp; □ Retención &nbsp;&nbsp; □ Expansión</p>
+  <p style="margin-top:8px;">Mi mayor oportunidad de crecimiento no capturada es:</p>
+  <div class="write-line"></div>
+
+  <h3 style="margin-top:16px;">2. Mi Modelo de Revenue</h3>
+  <p>Mi estrategia de monetización principal es: <span style="border-bottom:1px solid #000;display:inline-block;width:200px;">&nbsp;</span></p>
+  <p style="margin-top:8px;">Mi mayor desalineación detectada (métricas vs. modelo):</p>
+  <div class="write-line"></div><div class="write-line"></div>
+
+  <h3 style="margin-top:16px;">3. Mi Modelo de Datos (Bowtie)</h3>
+  <table>
+    <thead>
+      <tr><th>Métrica</th><th>Mi valor actual</th><th>Benchmark</th><th>Prioridad de mejora</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Win Rate (CR4)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td>□ Alta &nbsp;□ Media &nbsp;□ Baja</td></tr>
+      <tr><td>GRR (CR7)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td>□ Alta &nbsp;□ Media &nbsp;□ Baja</td></tr>
+      <tr><td>Expansión (CR8)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td>□ Alta &nbsp;□ Media &nbsp;□ Baja</td></tr>
+      <tr><td>Ciclo de ventas (Δt4)</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td>□ Alta &nbsp;□ Media &nbsp;□ Baja</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:16px;">4. La Palanca Matemática Prioritaria</h3>
+  <p>Si pudiera mejorar solo una variable en mi fórmula de crecimiento, elegiría:</p>
+  <div class="write-line"></div>
+  <p style="margin-top:8px;">Porque (impacto estimado):</p>
+  <div class="write-line"></div><div class="write-line"></div>
+
+  <h3 style="margin-top:16px;">5. Mis 3 acciones inmediatas</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Acción</th><th>Impacto esperado</th><th>Responsable</th><th>Fecha límite</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td>2</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+      <tr><td>3</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td><td class="td-write">&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="key-insight" style="margin-top:30px;">
+    "No recurring impact. No recurring revenue." — Jacco van der Kooij
+  </div>
+
+  <div class="footer">
+    Cuaderno de trabajo basado en <em>Revenue Architecture</em> de Jacco van der Kooij · Traducción y adaptación al español
+  </div>
+</div>
+
+</body>
+</html>
