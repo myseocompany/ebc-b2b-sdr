@@ -9,3 +9,12 @@ node_modules/
 vendor/
 dist/
 build/
+
+# derivados del generador de guiones
+scripts/guion_docx/tpl/
+__pycache__/
+
+# Datos personales de terceros — el repo es público (POLICIES.md)
+# Nombres de candidatas con su oferta económica y leads con enlace a su registro en CRM.
+progress/mensajes_*.md
+progress/*reporte-semanal*.md

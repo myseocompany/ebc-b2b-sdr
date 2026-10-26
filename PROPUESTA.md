@@ -7,7 +7,7 @@
 | **Fecha de emisión** | 12 de mayo de 2026 |
 | **Vigencia de la oferta** | 30 días desde la fecha de emisión |
 | **Período de contrato** | **1 de octubre de 2026 → 31 de diciembre de 2026** (90 días) |
-| **Fuente** | `tmp/Propuesta_EBC_Miami_ver3.pdf` (confirmación verbal de fechas: 1 oct 2026) |
+| **Fuente** | `tmp/Propuesta_EBC_Miami_ver4.pdf` (confirmación verbal de fechas: 1 oct 2026) |
 
 ---
 
@@ -96,12 +96,19 @@ La prioridad absoluta de los primeros 60 días es procesar los 778 leads vivos d
 
 - **SDR dedicado desde semana 1.** Persona junior remota LATAM, full-time o 6h/día, exclusiva de calificación y seguimiento sobre la base existente. *Sin este recurso, la propuesta no es viable.*
 - **Calificación retroactiva masiva.** El SDR contacta los 565 leads `Nuevo` con secuencia única de calificación (WhatsApp + llamada). Cualquier respuesta con interés se mueve a `Cotizado`. Tras tres intentos sin respuesta, se mueve a `No contesta`.
-- **Auditoría y simplificación del CRM.** Reducir a tres estados operativos: **Nuevo, Cotizado, Seguimiento**. Eliminar fricción que hoy enreda a Alejandro.
+- **Auditoría y simplificación del CRM.** Reducir a tres estados operativos: **Nuevo, Cotizado, Seguimiento**. Eliminar fricción que hoy enreda a Alejandro. *Ritual operativo: sesiones martes y jueves.*
 - **Recordatorios automáticos.** Alerta cuando un lead lleva 7 días sin tocarse. Reporte semanal de leads con reunión pendiente de seguimiento.
 - **Dashboard de pendientes.** Vista única para Alejandro al abrir su día: leads que requieren acción hoy.
 - **Activación de base histórica.** Bot de WhatsApp con cuota semanal de 50–100 contactos sobre los 6,527 de GMB. SDR deriva en tiempo real los que respondan con interés.
 - **Reducción temporal de pauta a ~$751.800 COP/mes.** El flujo nuevo se reduce mientras se procesa el inventario.
-- **Modelo Sprint.** Sesiones intensivas (ej. martes 8–10 AM): bot prospecta, SDR notifica a Alejandro para llamada inmediata sobre leads calientes.
+- **Modelo Sprint.** Sesiones intensivas (ej. martes 8–10 AM): bot prospecta, SDR notifica a Alejandro para llamada inmediata sobre leads calientes. **Producto ancla: Relpol → contactores.**
+
+**Perfil del cliente ideal (ICP) — base para calificar**
+
+- **Tipos de negocio:** tableristas, importadores, integradores, distribuidores, almacenes eléctricos.
+- **Perfil comercial:** proyectos activos, segunda oportunidad (compradores recurrentes), con referencias comerciales verificables.
+- **Disposición:** dispuesto a importar o con experiencia previa importando, consciente de que EBC opera desde Miami (no en el país del cliente).
+- **Ventana de oportunidad:** priorizar prospectos con decisión en 2 meses.
 
 **Meta del mes 1**
 

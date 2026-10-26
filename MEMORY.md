@@ -13,6 +13,7 @@ Un hallazgo entra aquí solo si:
 ## Índices
 
 - Contrato vigente: `PROPUESTA.md`.
+- Contexto para LLM (quién es EBC + contrato en un solo archivo, sin PII): `context/brief_contexto_ebc.md`.
 - Arquitectura de ingresos: `context/revenue-architecture/revenue-architecture-framework.md`.
 - Fuentes y autoridad: `SOURCES.md`.
 - Decisiones vigentes: `DECISIONS.md`.
