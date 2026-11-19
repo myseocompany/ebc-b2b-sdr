@@ -137,9 +137,9 @@ Generar `comparacion_*.png` (referencia | recorte en pieza | zoom) y `notas_fide
 | Línea | Carpeta | Contenido |
 |---|---|---|
 | PI6W / PIR6WB 6,2 mm, RSR30 en zócalo, RM699BV | `tmp/piezas_relpol_2026_11_09/referencias_oficiales_hd/oficial_relpol_pl/` | 10 JPG hasta 1825×1949, fondo blanco; detalle en `ORIGEN.md` |
-| PI6W extra + peines ZG20 | por mover desde el scratchpad de la sesión del 19-nov | PIR6WB-1PS 3/4 con bornes de resorte (1214×1260, nueva); peines ZG20-1/2/3 rojo, negro y azul (1239×552 c/u) y foto de grupo (1550×1276); PI6-1P y PI6-1T de la serie anterior (solo referencia, **no son PI6W**) |
-| NEED (relé programable) | por mover desde el scratchpad de la sesión del 19-nov | 16E/8S sin y con LCD (2049×1648, 2200×1808), 8E/4S con LCD (1672×1736), cables NEED-PC-15C/15B (2560×1808), memoria NEED-M-4KB (694×547, baja) |
-| R15 / R2N / R4N / zócalos | por mover desde el scratchpad de la sesión del 19-nov | R15 3P (1194×1095 y 1014×1486, botón azul o naranja), R2N (1160×1621), R4N (1147×1591), zócalos GZT4/GZT2/GZM2 (~1700×1500), módulo M41G LED/supresor (183×358, baja) |
+| PI6W extra + peines ZG20 | `tmp/relpol_productos_oficiales_2026_11_09/pi6w_extra/` | PIR6WB-1PS 3/4 con bornes de resorte (1214×1260, nueva); peines ZG20-1/2/3 rojo, negro y azul (1239×552 c/u) y foto de grupo (1550×1276); PI6-1P y PI6-1T de la serie anterior (solo referencia, **no son PI6W**) |
+| NEED (relé programable) | `tmp/relpol_productos_oficiales_2026_11_09/need/` | 16E/8S sin y con LCD (2049×1648, 2200×1808), 8E/4S con LCD (1672×1736), cables NEED-PC-15C/15B (2560×1808), memoria NEED-M-4KB (694×547, baja) |
+| R15 / R2N / R4N / zócalos | `tmp/relpol_productos_oficiales_2026_11_09/r15/` | R15 3P (1194×1095 y 1014×1486, botón azul o naranja), R2N (1160×1621), R4N (1147×1591), zócalos GZT4/GZT2/GZM2 (~1700×1500), módulo M41G LED/supresor (183×358, baja) |
 
 Notas de NEED (verificadas en la página oficial, no en la ficha PDF): 16 entradas/8 salidas (relé 10 A/250 V AC o transistor 0,5 A/24 V DC), familia compacta 8E/4S; alimentación 230 V AC, 12/24 V DC y 220 V DC; software gratuito, LAD y STL; montaje en riel DIN; versiones "-D" con LCD y teclado. El cartucho de memoria se llama **NEED-M-4KB** (no "4K8"). No existe "NEED-LCD-A" en el sitio oficial. Las fotos de una misma familia son idénticas entre tensiones: la etiqueta puede no coincidir con el modelo que se nombre.
 
