@@ -26,6 +26,8 @@ Resultado del primer recálculo:
 | C | 5.013 |
 | D | 5.086 |
 
+La tabla y la distribución de arriba son la versión inicial, de cuatro propiedades; la sección 3 trae las dos que se agregaron después y la distribución vigente.
+
 Limitación del motor: una propiedad sin coincidencia vale 0 y no existe nota negativa. Un contacto frío de Google Maps llega como máximo a C, y un descarte no puede bajar el grado.
 
 ### 1.2 Interés (temperatura), sin configurar
@@ -85,22 +87,39 @@ Hallazgos de la lectura:
 - Clientes activos que ya importan con EBC quedaron sin `ha_importado` cuando nadie lo dice textualmente.
 - Motivos de descarte dominantes: gente ajena al rubro que llegó por el anuncio, números equivocados, y pedidos de una o pocas unidades cerrados por el mínimo de importación.
 
-## 3. Pendiente de decisión: agregar los criterios al perfil
+## 3. Criterios del guion agregados al perfil
 
-Agregar `ha_importado` y `uso` como propiedades nuevas baja el grado de casi todos los contactos que no tienen el dato, porque el peso total crece y una propiedad vacía vale 0. Simulación con los datos reales:
+Se agregaron `ha_importado` y `uso` como propiedades nuevas del perfil (decisión del 23-nov, después de ver la simulación). Las cuatro propiedades anteriores conservan sus pesos; el total pasa de 100 a 120.
 
-| Peso importación / uso | A | B | C | D |
-|---|---:|---:|---:|---:|
-| Hoy (sin agregarlas) | 40 | 440 | 5.013 | 5.086 |
-| 10 / 10 | 21 | 77 | 4.096 | 6.385 |
-| 15 / 10 | 19 | 77 | 3.143 | 7.340 |
-| 20 / 15 | 20 | 57 | 2.768 | 7.734 |
+| Propiedad | Peso | Fuente | Notas |
+|---|---:|---|---|
+| Experiencia importando | 10 | `ha_importado` (exacto) | `si` 10 · `tercero` 7 · `dispuesto` 5 · `no` 1 |
+| Uso del material | 10 | `uso` (exacto) | `proyecto`, `comercializa`, `ambos` 10 · `planta` 6 |
 
-Con 10 / 10, 383 contactos pasan de B a C sin que haya cambiado nada en ellos. A cambio, de los 25 contactos que ya importan y son proyecto o comercializan, 16 quedan en A (hoy son 9).
+Resultado del recálculo, igual al de la simulación previa:
 
-Alternativa: llevar los criterios a etiquetas y puntuarlas dentro de "Calificación humana". Ahí gana la nota más alta, así que sube a quien tiene el criterio y no mueve a nadie más.
+| Grado | Antes | Ahora |
+|---|---:|---:|
+| A | 40 | 21 |
+| B | 440 | 77 |
+| C | 5.013 | 4.096 |
+| D | 5.086 | 6.387 |
 
-`agente_carga` y `horizonte_compra` no se usan para puntuar por ahora: tienen 20 y 36 datos.
+Cambiaron de grado 1.732 contactos; quedaron en el historial como corrida silenciosa, sin despachos. La lista de A y B baja de 480 a 98 porque el peso total crece y una propiedad vacía vale 0: quien no tiene el dato pierde puntaje. A cambio, de los 25 contactos que ya importan y son proyecto o comercializan, 16 quedan en A (antes 9).
+
+La alternativa descartada era llevar los criterios a etiquetas dentro de "Calificación humana", que no movía a nadie más.
+
+`agente_carga` y `horizonte_compra` no se usan para puntuar: tienen 20 y 36 datos.
+
+Para revertir: restaurar `fit_properties` desde `tmp/lead-scoring-2026-11-23/fit_properties_antes_opcion_b.json`.
+
+### 3.1 Descalificación (cambio en el motor, sin desplegar)
+
+Para que un descarte baje el grado se implementó en AriCRM una lista de reglas de descalificación (`fit_disqualifiers`): si el contacto cumple una, su perfil queda en D y el desglose guarda qué regla aplicó. Admite la condición "el campo tiene cualquier valor", que es la que necesita `motivo_descarte`.
+
+Estado: rama local `feature/lead-scoring-disqualifiers` en el repo de AriCRM, tres commits, sin push ni PR. Tests de lead scoring y suite completa en verde; la pantalla no se probó en navegador ni contra Postgres real. Mientras no se despliegue y se guarde la regla en EBC, los 170 descartados conservan su grado.
+
+Seguimiento anotado, sin implementar: que una propiedad vacía no cuente en la normalización de pesos.
 
 ## 4. AriPulse como reporte
 
@@ -117,3 +136,4 @@ En `tmp/lead-scoring-2026-11-23/`:
 - `backup_custom_fields_previos.json` — `custom_fields` de los 358 contactos antes de la escritura.
 - `export_expedientes.php` — consulta con la que se armaron los expedientes.
 - `instalar_perfil.php` — script con el que se creó la configuración del perfil.
+- `fit_properties_antes_opcion_b.json` — propiedades del perfil antes de agregar `ha_importado` y `uso`.
