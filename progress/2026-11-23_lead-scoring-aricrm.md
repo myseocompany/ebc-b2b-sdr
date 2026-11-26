@@ -113,13 +113,24 @@ La alternativa descartada era llevar los criterios a etiquetas dentro de "Califi
 
 Para revertir: restaurar `fit_properties` desde `tmp/lead-scoring-2026-11-23/fit_properties_antes_opcion_b.json`.
 
-### 3.1 Descalificación (cambio en el motor, sin desplegar)
+### 3.1 Descalificación (activa desde el 26-nov)
 
-Para que un descarte baje el grado se implementó en AriCRM una lista de reglas de descalificación (`fit_disqualifiers`): si el contacto cumple una, su perfil queda en D y el desglose guarda qué regla aplicó. Admite la condición "el campo tiene cualquier valor", que es la que necesita `motivo_descarte`.
+Para que un descarte baje el grado se agregó al motor de AriCRM una lista de reglas de descalificación (`fit_disqualifiers`, PR aricrm#306, fusionado y desplegado el 26-nov): si el contacto cumple una, su perfil queda en 0 y grado D, y el desglose guarda qué regla aplicó.
 
-Estado: rama local `feature/lead-scoring-disqualifiers` en el repo de AriCRM, tres commits, sin push ni PR. Tests de lead scoring y suite completa en verde; la pantalla no se probó en navegador ni contra Postgres real. Mientras no se despliegue y se guarde la regla en EBC, los 170 descartados conservan su grado.
+EBC tiene una regla, "Descartado": el campo `motivo_descarte` tiene cualquier valor. Resultado del recálculo del 26-nov:
 
-Seguimiento anotado, sin implementar: que una propiedad vacía no cuente en la normalización de pesos.
+| Grado | Antes de la regla | Con la regla |
+|---|---:|---:|
+| A | 21 | 21 |
+| B | 77 | 73 |
+| C | 4.096 | 3.975 |
+| D | 6.456 | 6.581 |
+
+Los 170 contactos con `motivo_descarte` quedaron en D (125 cambiaron de grado; 45 ya estaban ahí). Corrida silenciosa, sin despachos. Para revertir: quitar la regla en Ajustes → Lead scoring → Descalificación; el siguiente recálculo restaura los grados.
+
+Para descartar un contacto nuevo basta con escribir `motivo_descarte` en sus campos adicionales.
+
+Seguimiento anotado en el motor, sin implementar: que una propiedad vacía no cuente en la normalización de pesos.
 
 ## 4. AriPulse como reporte
 
